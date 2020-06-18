@@ -119,11 +119,8 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         self.band15File = ""
         self.band16File = ""
         self.band17File = ""
-<<<<<<< HEAD
-=======
+        self.band18File = ""
         
->>>>>>> 132b15512466ca006087acb05fc314714a1fe1da
-
         self.vnir_rad_scale = 0.0
         self.swir_rad_scale = 0.0
         # self.row = 0
