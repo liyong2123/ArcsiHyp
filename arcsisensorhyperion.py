@@ -94,25 +94,121 @@ import fmask.fmask
 import rios.fileinfo
 
 
-class ARCSILandsat8Sensor (ARCSIAbstractSensor):
+class ARCSIHyperionSensor (ARCSIAbstractSensor):
     """
     A class which represents the landsat 8 sensor to read
     header parameters and apply data processing operations.
     """
     def __init__(self, debugMode, inputImage):
         ARCSIAbstractSensor.__init__(self, debugMode, inputImage)
-        self.sensor = "LS8"
-        self.bandFile = [""] * 242
+        self.sensor = "hyp"
+        self.band1File = ""
+        self.band2File = ""
+        self.band3File = ""
+        self.band4File = ""
+        self.band5File = ""
+        self.band6File = ""
+        self.band7File = ""
+        self.band8File = ""
+        self.band9File = ""
+        self.band10File = ""
+        self.band11File = ""
+        self.band12File = ""
+        self.band13File = ""
+        self.band14File = ""
+        self.band15File = ""
+        self.band16File = ""
+        self.band17File = ""
+
+        self.vnir_rad_scale = 0.0
+        self.swir_rad_scale = 0.0
         # self.row = 0
         # self.path = 0
 
-        self.RadMulti = [0]*242
-        self.CalMax = [0]*242
+        # self.b1RadMulti = 0
+        # self.b1CalMax = 0
+        # self.b2RadMulti = 0
+        # self.b2CalMax = 0
+        # self.b3RadMulti = 0
+        # self.b3CalMax = 0
+        # self.b4RadMulti = 0
+        # self.b4CalMax = 0
+        # self.b5RadMulti = 0
+        # self.b5CalMax = 0
+        # self.b6aRadMulti = 0
+        # self.b6aCalMax = 0
+        # self.b6bRadMulti = 0
+        # self.b6bCalMax = 0
+        # self.b7RadMulti = 0
+        # self.b7CalMax = 0
+        # self.b8RadMulti = 0
+        # self.b8CalMax = 0
+        
+        # self.b9RadMulti = 0
+        # self.b9CalMax = 0
+        # self.b10RadMulti = 0
+        # self.b10CalMax = 0
+        # self.b11RadMulti = 0
+        # self.b11CalMax = 0
+        # self.b12RadMulti = 0
+        # self.b12CalMax = 0
+        # self.b13RadMulti = 0
+        # self.b13CalMax = 0
+        # self.b14aRadMulti = 0
+        # self.b14aCalMax = 0
+        # self.b15bRadMulti = 0
+        # self.b15bCalMax = 0
+        # self.b16RadMulti = 0
+        # self.b16CalMax = 0
+        # self.b17RadMulti = 0
+        # self.b17CalMax = 0
 
-        self.MaxRad = [0.0] * 242
-        self.RadAdd = [0.0] * 242
+        # self.b1RadAdd = 0.0
+        # self.b1MaxRad = 0.0
+        # self.b2RadAdd = 0.0
+        # self.b2MaxRad = 0.0
+        # self.b3RadAdd = 0.0
+        # self.b3MaxRad = 0.0
+        # self.b4RadAdd = 0.0
+        # self.b4MaxRad = 0.0
+        # self.b5RadAdd = 0.0
+        # self.b5MaxRad = 0.0
+        # self.b6aRadAdd = 0.0
+        # self.b6aMaxRad = 0.0
+        # self.b6bRadAdd = 0.0
+        # self.b6bMaxRad = 0.0
+        # self.b7RadAdd = 0.0
+        # self.b7MaxRad = 0.0
+        # self.b8RadAdd = 0.0
+        # self.b8MaxRad = 0.0
 
-        self.CalMin = [0.0] * 242
+        # self.b1CalMin = 0.0
+        # self.b1CalMax = 0.0
+        # self.b2CalMin = 0.0
+        # self.b2CalMax = 0.0
+        # self.b3CalMin = 0.0
+        # self.b3CalMax = 0.0
+        # self.b4CalMin = 0.0
+        # self.b4CalMax = 0.0
+        # self.b5CalMin = 0.0
+        # self.b5CalMax = 0.0
+        # self.b6CalMin = 0.0
+        # self.b6CalMax = 0.0
+        # self.b7CalMin = 0.0
+        # self.b7CalMax = 0.0
+        # self.b8CalMin = 0.0
+        # self.b8CalMax = 0.0
+        # self.b9CalMin = 0.0
+        # self.b9CalMax = 0.0
+        # self.b10CalMin = 0.0
+        # self.b10CalMax = 0.0
+        # self.b11CalMin = 0.0
+        # self.b11CalMax =  0.0
+
+        # self.k1ConstB10 = 0.0
+        # self.k1ConstB11 = 0.0
+        # self.k2ConstB10 = 0.0
+        # self.k2ConstB11 = 0.0
 
         self.sensorID = ""
         self.spacecraftID = ""
@@ -125,7 +221,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
 
     def extractHeaderParameters(self, inputHeader, wktStr):
         """
-        Understands and parses the Landsat MTL header files
+        Understands and parses the Hyperion MTL header files
         """
         try:
             if not self.userSpInputImage is None:
@@ -147,58 +243,64 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
             hFile.close()
             print("Extracting Header Values")
             # Get the sensor info.
-            if ((headerParams["SPACECRAFT_ID"].upper() == "EO1") or (headerParams["SPACECRAFT_ID"].upper() == "EO1")) and (headerParams["SENSOR_ID"].upper() == "HYPERION"):
-                self.sensor = "HYPERION"
+            if ((headerParams["SPACECRAFT_ID"].upper() == "EO1") or (headerParams["SPACECRAFT_ID"].upper() == "EO-1")) and (headerParams["SENSOR_ID"].upper() == "HYPERION"):
+                self.sensor = "hyp"
             else:
                 raise ARCSIException("Do no recognise the spacecraft and sensor or combination.")
 
             self.sensorID = headerParams["SENSOR_ID"]
             self.spacecraftID = headerParams["SPACECRAFT_ID"]
 
-            # Get row/path
-            self.row = int(headerParams["WRS_ROW"])
-            self.path = int(headerParams["WRS_PATH"])
+            # Get row/path Doesnt exist in hyperion
+            # self.row = int(headerParams["WRS_ROW"])
+            # self.path = int(headerParams["WRS_PATH"])
 
             # Get date and time of the acquisition
-            acData = headerParams["DATE_ACQUIRED"].split('-')
-            acTime = headerParams["SCENE_CENTER_TIME"].split(':')
-            secsTime = acTime[2].split('.')
-            self.acquisitionTime = datetime.datetime(int(acData[0]), int(acData[1]), int(acData[2]), int(acTime[0]), int(acTime[1]), int(secsTime[0]))
+            acData = headerParams["ACQUISITION_DATE"].split('-')
+            acTime = headerParams["START_TIME"].split(' ')
+            secsTime = acTime[2].split(':')
+            print(acData[0])
+            print(acData[1])
+            print(acData[2])
+            print(acTime[0])
+            print(acTime[1])
+            print(secsTime[0])
+            self.acquisitionTime = datetime.datetime(year=int(acData[0]),month=int(acData[1]),day= int(acData[2]),hour=int(secsTime[0]),minute=int(secsTime[1]),second=int(secsTime[2]))
 
             self.solarZenith = 90-arcsiUtils.str2Float(headerParams["SUN_ELEVATION"])
             self.solarAzimuth = arcsiUtils.str2Float(headerParams["SUN_AZIMUTH"])
 
             # Get the geographic lat/long corners of the image.
-            self.latTL = arcsiUtils.str2Float(headerParams["CORNER_UL_LAT_PRODUCT"])
-            self.lonTL = arcsiUtils.str2Float(headerParams["CORNER_UL_LON_PRODUCT"])
-            self.latTR = arcsiUtils.str2Float(headerParams["CORNER_UR_LAT_PRODUCT"])
-            self.lonTR = arcsiUtils.str2Float(headerParams["CORNER_UR_LON_PRODUCT"])
-            self.latBL = arcsiUtils.str2Float(headerParams["CORNER_LL_LAT_PRODUCT"])
-            self.lonBL = arcsiUtils.str2Float(headerParams["CORNER_LL_LON_PRODUCT"])
-            self.latBR = arcsiUtils.str2Float(headerParams["CORNER_LR_LAT_PRODUCT"])
-            self.lonBR = arcsiUtils.str2Float(headerParams["CORNER_LR_LON_PRODUCT"])
+            self.latTL = arcsiUtils.str2Float(headerParams["PRODUCT_UL_CORNER_LAT"])
+            self.lonTL = arcsiUtils.str2Float(headerParams["PRODUCT_UL_CORNER_LON"])
+            self.latTR = arcsiUtils.str2Float(headerParams["PRODUCT_UR_CORNER_LAT"])
+            self.lonTR = arcsiUtils.str2Float(headerParams["PRODUCT_UR_CORNER_LON"])
+            self.latBL = arcsiUtils.str2Float(headerParams["PRODUCT_LL_CORNER_LAT"])
+            self.lonBL = arcsiUtils.str2Float(headerParams["PRODUCT_LL_CORNER_LON"])
+            self.latBR = arcsiUtils.str2Float(headerParams["PRODUCT_LR_CORNER_LAT"])
+            self.lonBR = arcsiUtils.str2Float(headerParams["PRODUCT_LR_CORNER_LON"])
 
             # Get the projected X/Y corners of the image
-            self.xTL = arcsiUtils.str2Float(headerParams["CORNER_UL_PROJECTION_X_PRODUCT"])
-            self.yTL = arcsiUtils.str2Float(headerParams["CORNER_UL_PROJECTION_Y_PRODUCT"])
-            self.xTR = arcsiUtils.str2Float(headerParams["CORNER_UR_PROJECTION_X_PRODUCT"])
-            self.yTR = arcsiUtils.str2Float(headerParams["CORNER_UR_PROJECTION_Y_PRODUCT"])
-            self.xBL = arcsiUtils.str2Float(headerParams["CORNER_LL_PROJECTION_X_PRODUCT"])
-            self.yBL = arcsiUtils.str2Float(headerParams["CORNER_LL_PROJECTION_Y_PRODUCT"])
-            self.xBR = arcsiUtils.str2Float(headerParams["CORNER_LR_PROJECTION_X_PRODUCT"])
-            self.yBR = arcsiUtils.str2Float(headerParams["CORNER_LR_PROJECTION_Y_PRODUCT"])
+            self.xTL = arcsiUtils.str2Float(headerParams["PRODUCT_UL_CORNER_MAPX"])
+            self.yTL = arcsiUtils.str2Float(headerParams["PRODUCT_UL_CORNER_MAPY"])
+            self.xTR = arcsiUtils.str2Float(headerParams["PRODUCT_UR_CORNER_MAPX"])
+            self.yTR = arcsiUtils.str2Float(headerParams["PRODUCT_UR_CORNER_MAPY"])
+            self.xBL = arcsiUtils.str2Float(headerParams["PRODUCT_LL_CORNER_MAPX"])
+            self.yBL = arcsiUtils.str2Float(headerParams["PRODUCT_LL_CORNER_MAPY"])
+            self.xBR = arcsiUtils.str2Float(headerParams["PRODUCT_LR_CORNER_MAPX"])
+            self.yBR = arcsiUtils.str2Float(headerParams["PRODUCT_LR_CORNER_MAPY"])
 
             # Get projection
             inProj = osr.SpatialReference()
-            if (headerParams["MAP_PROJECTION"] == "UTM") and (headerParams["DATUM"] == "WGS84") and (headerParams["ELLIPSOID"] == "WGS84"):
-                utmZone = int(headerParams["UTM_ZONE"])
+            if (headerParams["MAP_PROJECTION"] == "UTM") and (headerParams["REFERENCE_DATUM"] == "WGS84") and (headerParams["REFERENCE_ELLIPSOID"] == "WGS84"):
+                utmZone = int(headerParams["ZONE_NUMBER"])
                 utmCode = "WGS84UTM" + str(utmZone) + str("N")
                 #print("UTM: ", utmCode)
                 inProj.ImportFromEPSG(self.epsgCodes[utmCode])
-            elif (headerParams["MAP_PROJECTION"] == "PS") and (headerParams["DATUM"] == "WGS84") and (headerParams["ELLIPSOID"] == "WGS84"):
+            elif (headerParams["MAP_PROJECTION"] == "PS") and (headerParams["REFERENCE_DATUM"] == "WGS84") and (headerParams["REFERENCE_ELLIPSOID"] == "WGS84"):
                 inProj.ImportFromWkt("PROJCS[\"PS WGS84\", GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563, AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0],UNIT[\"degree\",0.0174532925199433],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Polar_Stereographic\"],PARAMETER[\"latitude_of_origin\",-71],PARAMETER[\"central_meridian\",0],PARAMETER[\"scale_factor\",1],PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]]]")
             else:
-                raise ARCSIException("Expecting Landsat to be projected in UTM or PolarStereographic (PS) with datum=WGS84 and ellipsoid=WGS84.")
+                raise ARCSIException("Expecting Hyperion to be projected in UTM or PolarStereographic (PS) with datum=WGS84 and ellipsoid=WGS84.")
 
             if self.inWKT is "":
                 self.inWKT = inProj.ExportToWkt()
@@ -216,90 +318,27 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
 
             filesDIR = os.path.dirname(inputHeader)
 
-            self.band1File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_1"])
-            self.band2File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_2"])
-            self.band3File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_3"])
-            self.band4File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_4"])
-            self.band5File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_5"])
-            self.band6File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_6"])
-            self.band7File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_7"])
-            self.band8File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_8"])
-            self.band9File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_9"])
-            self.band10File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_10"])
-            self.band11File = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_11"])
-            self.bandQAFile = os.path.join(filesDIR, headerParams["FILE_NAME_BAND_QUALITY"])
+            self.band1File = os.path.join(filesDIR, headerParams["BAND1_FILE_NAME"])
+            self.band2File = os.path.join(filesDIR, headerParams["BAND2_FILE_NAME"])
+            self.band3File = os.path.join(filesDIR, headerParams["BAND3_FILE_NAME"])
+            self.band4File = os.path.join(filesDIR, headerParams["BAND4_FILE_NAME"])
+            self.band5File = os.path.join(filesDIR, headerParams["BAND5_FILE_NAME"])
+            self.band6File = os.path.join(filesDIR, headerParams["BAND6_FILE_NAME"])
+            self.band7File = os.path.join(filesDIR, headerParams["BAND7_FILE_NAME"])
+            self.band8File = os.path.join(filesDIR, headerParams["BAND8_FILE_NAME"])
+            self.band9File = os.path.join(filesDIR, headerParams["BAND9_FILE_NAME"])
+            self.band10File = os.path.join(filesDIR, headerParams["BAND10_FILE_NAME"])
+            self.band11File = os.path.join(filesDIR, headerParams["BAND11_FILE_NAME"])
+            self.band12File = os.path.join(filesDIR, headerParams["BAND12_FILE_NAME"])
+            self.band13File = os.path.join(filesDIR, headerParams["BAND13_FILE_NAME"])
+            self.band14File = os.path.join(filesDIR, headerParams["BAND14_FILE_NAME"])
+            self.band15File = os.path.join(filesDIR, headerParams["BAND15_FILE_NAME"])
+            self.band16File = os.path.join(filesDIR, headerParams["BAND16_FILE_NAME"])
+            self.band17File = os.path.join(filesDIR, headerParams["BAND17_FILE_NAME"])
 
-            self.b1RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_1"])
-            self.b2RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_2"])
-            self.b3RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_3"])
-            self.b4RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_4"])
-            self.b5RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_5"])
-            self.b6RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_6"])
-            self.b7RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_7"])
-            self.b8RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_8"])
-            self.b9RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_9"])
-            self.b10RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_10"])
-            self.b11RadMulti = arcsiUtils.str2Float(headerParams["RADIANCE_MULT_BAND_11"])
 
-            self.b1RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_1"])
-            self.b2RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_2"])
-            self.b3RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_3"])
-            self.b4RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_4"])
-            self.b5RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_5"])
-            self.b6RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_6"])
-            self.b7RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_7"])
-            self.b8RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_8"])
-            self.b9RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_9"])
-            self.b10RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_10"])
-            self.b11RadAdd = arcsiUtils.str2Float(headerParams["RADIANCE_ADD_BAND_11"])
-
-            self.k1ConstB10 = arcsiUtils.str2Float(headerParams["K1_CONSTANT_BAND_10"])
-            self.k1ConstB11 = arcsiUtils.str2Float(headerParams["K1_CONSTANT_BAND_11"])
-            self.k2ConstB10 = arcsiUtils.str2Float(headerParams["K2_CONSTANT_BAND_10"])
-            self.k2ConstB11 = arcsiUtils.str2Float(headerParams["K2_CONSTANT_BAND_11"])
-
-            self.b1ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_1"])
-            self.b2ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_2"])
-            self.b3ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_3"])
-            self.b4ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_4"])
-            self.b5ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_5"])
-            self.b6ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_6"])
-            self.b7ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_7"])
-            self.b8ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_8"])
-            self.b9ReflMulti = arcsiUtils.str2Float(headerParams["REFLECTANCE_MULT_BAND_9"])
-
-            self.b1ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_1"])
-            self.b2ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_2"])
-            self.b3ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_3"])
-            self.b4ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_4"])
-            self.b5ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_5"])
-            self.b6ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_6"])
-            self.b7ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_7"])
-            self.b8ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_8"])
-            self.b9ReflAdd = arcsiUtils.str2Float(headerParams["REFLECTANCE_ADD_BAND_9"])
-
-            self.b1CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_1"])
-            self.b1CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_1"])
-            self.b2CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_2"])
-            self.b2CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_2"])
-            self.b3CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_3"])
-            self.b3CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_3"])
-            self.b4CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_4"])
-            self.b4CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_4"])
-            self.b5CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_5"])
-            self.b5CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_5"])
-            self.b6CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_6"])
-            self.b6CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_6"])
-            self.b7CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_7"])
-            self.b7CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_7"])
-            self.b8CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_8"])
-            self.b8CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_8"])
-            self.b9CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_9"])
-            self.b9CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_9"])
-            self.b10CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_10"])
-            self.b10CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_10"])
-            self.b11CalMin = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MIN_BAND_11"])
-            self.b11CalMax = arcsiUtils.str2Float(headerParams["QUANTIZE_CAL_MAX_BAND_11"])
+            self.vnir_rad_scale = 1/arcsiUtils.str2Float(headerParams["SCALING_FACTOR_VNIR"])
+            self.swir_rad_scale = 1/arcsiUtils.str2Float(headerParams["SCALING_FACTOR_SWIR"])
 
             if "CLOUD_COVER" in headerParams:
                 self.cloudCover = arcsiUtils.str2Float(headerParams["CLOUD_COVER"], 0.0)
@@ -307,17 +346,14 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
                 self.cloudCoverLand = arcsiUtils.str2Float(headerParams["CLOUD_COVER_LAND"], 0.0)
             if "EARTH_SUN_DISTANCE" in headerParams:
                 self.earthSunDistance = arcsiUtils.str2Float(headerParams["EARTH_SUN_DISTANCE"], 0.0)
-            if "GRID_CELL_SIZE_REFLECTIVE" in headerParams:
-                self.gridCellSizeRefl = arcsiUtils.str2Float(headerParams["GRID_CELL_SIZE_REFLECTIVE"], 60.0)
-            if "GRID_CELL_SIZE_THERMAL" in headerParams:
-                self.gridCellSizeTherm = arcsiUtils.str2Float(headerParams["GRID_CELL_SIZE_THERMAL"], 30.0)
-            if "GRID_CELL_SIZE_PANCHROMATIC" in headerParams:
-                self.gridCellSizePan = arcsiUtils.str2Float(headerParams["GRID_CELL_SIZE_PANCHROMATIC"], 15.0)
+            if "GRID_CELL_SIZE" in headerParams:
+                self.gridCellSizeRefl = arcsiUtils.str2Float(headerParams["GRID_CELL_SIZE"], 30.0)
+
 
             # Read MTL header into python dict for python-fmask
             self.fmaskMTLInfo = fmask.config.readMTLFile(inputHeader)
 
-            fileDateStr = headerParams["FILE_DATE"].strip()
+            fileDateStr = headerParams["PRODUCT_CREATION_TIME"].strip()
             fileDateStr = fileDateStr.replace('Z', '')
             self.fileDateObj = datetime.datetime.strptime(fileDateStr, "%Y-%m-%dT%H:%M:%S")
 
@@ -343,9 +379,9 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         """
         Provides an implementation for the landsat sensor
         """
-        rowpath = "r" + str(self.row) + "p" + str(self.path)
+        #rowpath = "r" + str(self.row) + "p" + str(self.path)
         outname = self.defaultGenBaseOutFileName()
-        outname = outname + str("_") + rowpath
+        outname = outname + str("_")
         return outname
 
     def generateMetaDataFile(self, outputPath, outputFileName, productsStr, validMaskImage="", footprintCalc=False, calcdValuesDict=dict(), outFilesDict=dict()):
@@ -355,18 +391,13 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         outJSONFilePath = os.path.join(outputPath, outputFileName)
         jsonData = self.getJSONDictDefaultMetaData(productsStr, validMaskImage, footprintCalc, calcdValuesDict, outFilesDict)
         sensorInfo = jsonData['SensorInfo']
-        sensorInfo['Row'] = self.row
-        sensorInfo['Path'] = self.path
+        # sensorInfo['Row'] = self.row
+        # sensorInfo['Path'] = self.path
         sensorInfo['SensorID'] = self.sensorID
         sensorInfo['SpacecraftID'] = self.spacecraftID
         acqDict = jsonData['AcquasitionInfo']
-        acqDict['EarthSunDistance'] = self.earthSunDistance
         imgInfo = dict()
-        imgInfo['CloudCover'] = self.cloudCover
-        imgInfo['CloudCoverLand'] = self.cloudCoverLand
         imgInfo['CellSizePan'] = self.gridCellSizePan
-        imgInfo['CellSizeRefl'] = self.gridCellSizeRefl
-        imgInfo['CellSizeTherm'] = self.gridCellSizeTherm
         jsonData['ImageInfo'] = imgInfo
 
         with open(outJSONFilePath, 'w') as outfile:
@@ -403,7 +434,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         return imageDataPresent
 
     def hasThermal(self):
-        return True
+        return False
 
     def applyImageDataMask(self, inputHeader, outputPath, outputMaskName, outputImgName, outFormat, outWKTFile):
         raise ARCSIException("Landsat 8 does not provide any image masks, do not use the MASK option.")
@@ -418,11 +449,43 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         raise ARCSIException("Image sharpening is not available for this sensor.")
 
     def generateValidImageDataMask(self, outputPath, outputMaskName, viewAngleImg, outFormat):
+        def sunAnglesForExtent(imgInfo, mtlInfo):
+            cornerLatLong = imgInfo.getCorners(outEPSG=4326)
+            (ul_long, ul_lat, ur_long, ur_lat, lr_long, lr_lat, ll_long, ll_lat) = cornerLatLong
+            pts = numpy.array([
+                [ul_long, ul_lat],
+                [ur_long, ur_lat],
+                [ll_long, ll_lat],
+                [lr_long, lr_lat]
+            ])
+            longDeg = pts[:, 0]
+            latDeg = pts[:, 1]
+
+            # Date/time in UTC
+            dateStr = mtlInfo['DATE_ACQUIRED']
+            timeStr = (mtlInfo['START_TIME'].replace('Z', '')).split(" ")[2]
+            print(timeStr)
+            ymd = [int(i) for i in dateStr.split('-')]
+            dateObj = datetime.date(ymd[0], ymd[1], ymd[2])
+            julianDay = (dateObj - datetime.date(ymd[0], 1, 1)).days + 1
+            juldayYearEnd = (datetime.date(ymd[0], 12, 31) - datetime.date(ymd[0], 1, 1)).days + 1
+            # Julian day as a proportion of the year
+            jdp = julianDay / juldayYearEnd
+            # Hour in UTC
+            hms = [float(x) for x in timeStr.split(':')]
+            hourGMT = hms[0] + hms[1] / 60.0 + hms[2] / 3600.0
+
+            (sunAz, sunZen) = fmask.landsatangles.sunAnglesForPoints(latDeg, longDeg, hourGMT, jdp)
+
+
+            sunAngles = numpy.vstack((sunAz, sunZen)).T
+            return sunAngles
         print("Create the valid data mask")
         tmpBaseName = os.path.splitext(outputMaskName)[0]
         tmpValidPxlMsk = os.path.join(outputPath, tmpBaseName+'vldpxlmsk.kea')
         outputImage = os.path.join(outputPath, outputMaskName)
-        inImages = [self.band1File, self.band2File, self.band3File, self.band4File, self.band5File, self.band6File, self.band7File, self.band10File, self.band11File]
+        inImages = [self.band1File, self.band2File, self.band3File, self.band4File, self.band5File, self.band6File, self.band7File, self.band10File, self.band11File
+        , self.band12File, self.band13File, self.band14File, self.band15File, self.band16File, self.band17File]
         rsgislib.imageutils.genValidMask(inimages=inImages, outimage=tmpValidPxlMsk, gdalformat='KEA', nodata=0.0)
         rsgislib.rastergis.populateStats(tmpValidPxlMsk, True, False, True)
         # Check there is valid data
@@ -436,7 +499,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
             imgInfo = rios.fileinfo.ImageInfo(tmpValidPxlMsk)
             corners = fmask.landsatangles.findImgCorners(tmpValidPxlMsk, imgInfo)
             nadirLine = fmask.landsatangles.findNadirLine(corners)
-            extentSunAngles = fmask.landsatangles.sunAnglesForExtent(imgInfo, self.fmaskMTLInfo)
+            extentSunAngles = sunAnglesForExtent(imgInfo, self.fmaskMTLInfo)
             satAzimuth = fmask.landsatangles.satAzLeftRight(nadirLine)
             fmask.landsatangles.makeAnglesImage(tmpValidPxlMsk, viewAngleImg, nadirLine, extentSunAngles, satAzimuth, imgInfo)
             dataset = gdal.Open(viewAngleImg, gdal.GA_Update)
@@ -456,205 +519,227 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         outputReflImage = os.path.join(outputPath, outputReflName)
         outputThermalImage = None
         bandDefnSeq = list()
-
         lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'addVal', 'multiVal'])
-        bandDefnSeq.append(lsBand(bandName="Coastal", fileName=self.band1File, bandIndex=1, addVal=self.b1RadAdd, multiVal=self.b1RadMulti))
-        bandDefnSeq.append(lsBand(bandName="Blue", fileName=self.band2File, bandIndex=1, addVal=self.b2RadAdd, multiVal=self.b2RadMulti))
-        bandDefnSeq.append(lsBand(bandName="Green", fileName=self.band3File, bandIndex=1, addVal=self.b3RadAdd, multiVal=self.b3RadMulti))
-        bandDefnSeq.append(lsBand(bandName="Red", fileName=self.band4File, bandIndex=1, addVal=self.b4RadAdd, multiVal=self.b4RadMulti))
-        bandDefnSeq.append(lsBand(bandName="NIR", fileName=self.band5File, bandIndex=1, addVal=self.b5RadAdd, multiVal=self.b5RadMulti))
-        bandDefnSeq.append(lsBand(bandName="SWIR1", fileName=self.band6File, bandIndex=1, addVal=self.b6RadAdd, multiVal=self.b6RadMulti))
-        bandDefnSeq.append(lsBand(bandName="SWIR2", fileName=self.band7File, bandIndex=1, addVal=self.b7RadAdd, multiVal=self.b7RadMulti))
+        bandDefnSeq.append(lsBand(bandName="Band1", fileName=self. , bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band2", fileName=self.band2File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band3", fileName=self.band3File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band4", fileName=self.band4File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band5", fileName=self.band5File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band6", fileName=self.band6File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band7", fileName=self.band7File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band8", fileName=self.band8File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band9", fileName=self.band9File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band10", fileName=self.band10File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band11", fileName=self.band11File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band12", fileName=self.band12File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band13", fileName=self.band13File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band14", fileName=self.band14File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band15", fileName=self.band15File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band16", fileName=self.band16File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        bandDefnSeq.append(lsBand(bandName="Band17", fileName=self.band17File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        print("ok")
+
         rsgislib.imagecalibration.landsat2RadianceMultiAdd(outputReflImage, outFormat, bandDefnSeq)
 
-        if not outputThermalName == None:
-            outputThermalImage = os.path.join(outputPath, outputThermalName)
-            bandDefnSeq = list()
-            lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'addVal', 'multiVal'])
-            bandDefnSeq.append(lsBand(bandName="ThermalB10", fileName=self.band10File, bandIndex=1, addVal=self.b10RadAdd, multiVal=self.b10RadMulti))
-            bandDefnSeq.append(lsBand(bandName="ThermalB11", fileName=self.band11File, bandIndex=1, addVal=self.b11RadAdd, multiVal=self.b11RadMulti))
-            rsgislib.imagecalibration.landsat2RadianceMultiAdd(outputThermalImage, outFormat, bandDefnSeq)
+        # if not outputThermalName == None:
+        #     outputThermalImage = os.path.join(outputPath, outputThermalName)
+        #     bandDefnSeq = list()
+        #     lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'addVal', 'multiVal'])
+        #     bandDefnSeq.append(lsBand(bandName="ThermalB10", fileName=self.band10File, bandIndex=1, addVal=self.b10RadAdd, multiVal=self.b10RadMulti))
+        #     bandDefnSeq.append(lsBand(bandName="ThermalB11", fileName=self.band11File, bandIndex=1, addVal=self.b11RadAdd, multiVal=self.b11RadMulti))
+        #     rsgislib.imagecalibration.landsat2RadianceMultiAdd(outputThermalImage, outFormat, bandDefnSeq)
 
         return outputReflImage, outputThermalImage
 
-    def generateImageSaturationMask(self, outputPath, outputName, outFormat):
-        print("Generate Saturation Image")
-        outputImage = os.path.join(outputPath, outputName)
+    # def generateImageSaturationMask(self, outputPath, outputName, outFormat):
+    #     print("Generate Saturation Image")
+    #     outputImage = os.path.join(outputPath, outputName)
 
-        lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'satVal'])
-        bandDefnSeq = list()
-        bandDefnSeq.append(lsBand(bandName="Coastal", fileName=self.band1File, bandIndex=1, satVal=self.b1CalMax))
-        bandDefnSeq.append(lsBand(bandName="Blue", fileName=self.band2File, bandIndex=1, satVal=self.b2CalMax))
-        bandDefnSeq.append(lsBand(bandName="Green", fileName=self.band3File, bandIndex=1, satVal=self.b3CalMax))
-        bandDefnSeq.append(lsBand(bandName="Red", fileName=self.band4File, bandIndex=1, satVal=self.b4CalMax))
-        bandDefnSeq.append(lsBand(bandName="NIR", fileName=self.band5File, bandIndex=1, satVal=self.b5CalMax))
-        bandDefnSeq.append(lsBand(bandName="SWIR1", fileName=self.band6File, bandIndex=1, satVal=self.b6CalMax))
-        bandDefnSeq.append(lsBand(bandName="SWIR2", fileName=self.band7File, bandIndex=1, satVal=self.b7CalMax))
-        bandDefnSeq.append(lsBand(bandName="ThermalB10", fileName=self.band10File, bandIndex=1, satVal=self.b10CalMax))
-        bandDefnSeq.append(lsBand(bandName="ThermalB11", fileName=self.band11File, bandIndex=1, satVal=self.b11CalMax))
+    #     lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'satVal'])
+    #     bandDefnSeq = list()
+    #     bandDefnSeq.append(lsBand(bandName="Coastal", fileName=self.band1File, bandIndex=1, satVal=self.b1CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="Blue", fileName=self.band2File, bandIndex=1, satVal=self.b2CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="Green", fileName=self.band3File, bandIndex=1, satVal=self.b3CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="Red", fileName=self.band4File, bandIndex=1, satVal=self.b4CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="NIR", fileName=self.band5File, bandIndex=1, satVal=self.b5CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="SWIR1", fileName=self.band6File, bandIndex=1, satVal=self.b6CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="SWIR2", fileName=self.band7File, bandIndex=1, satVal=self.b7CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="ThermalB10", fileName=self.band10File, bandIndex=1, satVal=self.b10CalMax))
+    #     bandDefnSeq.append(lsBand(bandName="ThermalB11", fileName=self.band11File, bandIndex=1, satVal=self.b11CalMax))
 
-        rsgislib.imagecalibration.saturatedPixelsMask(outputImage, outFormat, bandDefnSeq)
+    #     rsgislib.imagecalibration.saturatedPixelsMask(outputImage, outFormat, bandDefnSeq)
 
-        return outputImage
+    #     return outputImage
+# NO THERMALFOR EO1
+    # def convertThermalToBrightness(self, inputRadImage, outputPath, outputName, outFormat, scaleFactor):
+    #     print("Converting to Thermal Brightness")
+    #     outputThermalImage = os.path.join(outputPath, outputName)
+    #     bandDefnSeq = list()
 
-    def convertThermalToBrightness(self, inputRadImage, outputPath, outputName, outFormat, scaleFactor):
-        print("Converting to Thermal Brightness")
-        outputThermalImage = os.path.join(outputPath, outputName)
-        bandDefnSeq = list()
-
-        lsBand = collections.namedtuple('LSBand', ['bandName', 'bandIndex', 'k1', 'k2'])
-        bandDefnSeq.append(lsBand(bandName="ThermalB10", bandIndex=1, k1=self.k1ConstB10, k2=self.k2ConstB10))
-        bandDefnSeq.append(lsBand(bandName="ThermalB11", bandIndex=2, k1=self.k1ConstB11, k2=self.k2ConstB11))
-        rsgislib.imagecalibration.landsatThermalRad2Brightness(inputRadImage, outputThermalImage, outFormat, rsgislib.TYPE_32INT, scaleFactor, bandDefnSeq)
-        return outputThermalImage
+    #     lsBand = collections.namedtuple('LSBand', ['bandName', 'bandIndex', 'k1', 'k2'])
+    #     bandDefnSeq.append(lsBand(bandName="ThermalB10", bandIndex=1, k1=self.k1ConstB10, k2=self.k2ConstB10))
+    #     bandDefnSeq.append(lsBand(bandName="ThermalB11", bandIndex=2, k1=self.k1ConstB11, k2=self.k2ConstB11))
+    #     rsgislib.imagecalibration.landsatThermalRad2Brightness(inputRadImage, outputThermalImage, outFormat, rsgislib.TYPE_32INT, scaleFactor, bandDefnSeq)
+    #     return outputThermalImage
 
     def convertImageToTOARefl(self, inputRadImage, outputPath, outputName, outFormat, scaleFactor):
         print("Converting to TOA")
         outputImage = os.path.join(outputPath, outputName)
         solarIrradianceVals = list()
         IrrVal = collections.namedtuple('SolarIrradiance', ['irradiance'])
-        solarIrradianceVals.append(IrrVal(irradiance=1876.61))
-        solarIrradianceVals.append(IrrVal(irradiance=1970.03))
-        solarIrradianceVals.append(IrrVal(irradiance=1848.9))
-        solarIrradianceVals.append(IrrVal(irradiance=1571.3))
-        solarIrradianceVals.append(IrrVal(irradiance=967.66))
-        solarIrradianceVals.append(IrrVal(irradiance=245.73))
-        solarIrradianceVals.append(IrrVal(irradiance=82.03))
+        solarIrradianceVals.append(IrrVal(irradiance=0949.37)) #band1
+        solarIrradianceVals.append(IrrVal(irradiance=1158.78)) #band2 ....
+        solarIrradianceVals.append(IrrVal(irradiance=1061.25))
+        solarIrradianceVals.append(IrrVal(irradiance=0955.12))
+        solarIrradianceVals.append(IrrVal(irradiance=0970.87))
+        solarIrradianceVals.append(IrrVal(irradiance=1663.73))
+        solarIrradianceVals.append(IrrVal(irradiance=1722.92))
+        solarIrradianceVals.append(IrrVal(irradiance=1650.52))
+        solarIrradianceVals.append(IrrVal(irradiance=1714.90))
+        solarIrradianceVals.append(IrrVal(irradiance=1994.52))
+        solarIrradianceVals.append(IrrVal(irradiance=2034.72))
+        solarIrradianceVals.append(IrrVal(irradiance=1970.12))
+        solarIrradianceVals.append(IrrVal(irradiance=2036.22))
+        solarIrradianceVals.append(IrrVal(irradiance=1860.24))
+        solarIrradianceVals.append(IrrVal(irradiance=1953.29))
+        solarIrradianceVals.append(IrrVal(irradiance=1953.55))
+        solarIrradianceVals.append(IrrVal(irradiance=1804.56))
+
         rsgislib.imagecalibration.radiance2TOARefl(inputRadImage, outputImage, outFormat, rsgislib.TYPE_16UINT, scaleFactor, self.acquisitionTime.year, self.acquisitionTime.month, self.acquisitionTime.day, self.solarZenith, solarIrradianceVals)
         return outputImage
 
-    def generateCloudMask(self, inputReflImage, inputSatImage, inputThermalImage, inputViewAngleImg, inputValidImg, outputPath, outputName, outFormat, tmpPath, scaleFactor, cloud_msk_methods=None):
-        try:
-            arcsiUtils = ARCSIUtils()
-            rsgisUtils = rsgislib.RSGISPyUtils()
-            outputImage = os.path.join(outputPath, outputName)
-            tmpBaseName = os.path.splitext(outputName)[0]
-            imgExtension = arcsiUtils.getFileExtension(outFormat)
-            tmpBaseDIR = os.path.join(tmpPath, tmpBaseName)
+    # def generateCloudMask(self, inputReflImage, inputSatImage, inputThermalImage, inputViewAngleImg, inputValidImg, outputPath, outputName, outFormat, tmpPath, scaleFactor, cloud_msk_methods=None):
+    #     try:
+    #         arcsiUtils = ARCSIUtils()
+    #         rsgisUtils = rsgislib.RSGISPyUtils()
+    #         outputImage = os.path.join(outputPath, outputName)
+    #         tmpBaseName = os.path.splitext(outputName)[0]
+    #         imgExtension = arcsiUtils.getFileExtension(outFormat)
+    #         tmpBaseDIR = os.path.join(tmpPath, tmpBaseName)
 
-            tmpDIRExisted = True
-            if not os.path.exists(tmpBaseDIR):
-                os.makedirs(tmpBaseDIR)
-                tmpDIRExisted = False
+    #         tmpDIRExisted = True
+    #         if not os.path.exists(tmpBaseDIR):
+    #             os.makedirs(tmpBaseDIR)
+    #             tmpDIRExisted = False
 
-            if (cloud_msk_methods is None) or (cloud_msk_methods == 'FMASK'):
-                tmpFMaskOut = os.path.join(tmpBaseDIR, tmpBaseName+'_pyfmaskout.kea')
+    #         if (cloud_msk_methods is None) or (cloud_msk_methods == 'FMASK'):
+    #             tmpFMaskOut = os.path.join(tmpBaseDIR, tmpBaseName+'_pyfmaskout.kea')
 
-                # Create tmp TOA stack with Band 9 (Cirrus)
-                tmpTOAB9Out = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAB9.kea')
-                toaExp = '((b1*'+str(self.b9ReflMulti)+')+'+str(self.b9ReflAdd)+')*'+str(scaleFactor)
-                rsgislib.imagecalc.imageMath(self.band9File, tmpTOAB9Out, toaExp, 'KEA', rsgislib.TYPE_16UINT, False)
-                if not rsgisUtils.doGDALLayersHaveSameProj(inputReflImage, tmpTOAB9Out):
-                    tmpTOAB9OutNotProj = tmpTOAB9Out
-                    tmpTOAB9Out = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAB9_reproj.kea')
-                    rsgislib.imageutils.resampleImage2Match(inputReflImage, tmpTOAB9OutNotProj, tmpTOAB9Out, 'KEA', 'cubic', rsgislib.TYPE_16UINT)
+    #             # Create tmp TOA stack with Band 9 (Cirrus)
+    #             tmpTOAB9Out = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAB9.kea')
+    #             toaExp = '((b1*'+str(self.b9ReflMulti)+')+'+str(self.b9ReflAdd)+')*'+str(scaleFactor)
+    #             rsgislib.imagecalc.imageMath(self.band9File, tmpTOAB9Out, toaExp, 'KEA', rsgislib.TYPE_16UINT, False)
+    #             if not rsgisUtils.doGDALLayersHaveSameProj(inputReflImage, tmpTOAB9Out):
+    #                 tmpTOAB9OutNotProj = tmpTOAB9Out
+    #                 tmpTOAB9Out = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAB9_reproj.kea')
+    #                 rsgislib.imageutils.resampleImage2Match(inputReflImage, tmpTOAB9OutNotProj, tmpTOAB9Out, 'KEA', 'cubic', rsgislib.TYPE_16UINT)
 
-                tmpReflStackOut = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAreflStack.kea')
-                rsgislib.imageutils.stackImageBands([inputReflImage, tmpTOAB9Out], None, tmpReflStackOut, None, 0, 'KEA', rsgislib.TYPE_16UINT)
+    #             tmpReflStackOut = os.path.join(tmpBaseDIR, tmpBaseName+'_TOAreflStack.kea')
+    #             rsgislib.imageutils.stackImageBands([inputReflImage, tmpTOAB9Out], None, tmpReflStackOut, None, 0, 'KEA', rsgislib.TYPE_16UINT)
 
-                tmpThermStack = os.path.join(tmpBaseDIR, tmpBaseName + '_ThermB10B11Stack.kea')
-                rsgislib.imageutils.stackImageBands([self.band10File, self.band11File], None, tmpThermStack, None, 0, 'KEA', rsgislib.TYPE_16UINT)
+    #             tmpThermStack = os.path.join(tmpBaseDIR, tmpBaseName + '_ThermB10B11Stack.kea')
+    #             rsgislib.imageutils.stackImageBands([self.band10File, self.band11File], None, tmpThermStack, None, 0, 'KEA', rsgislib.TYPE_16UINT)
 
-                tmpThermalLayer = tmpThermStack
-                if not rsgisUtils.doGDALLayersHaveSameProj(inputThermalImage, tmpThermStack):
-                    tmpThermalLayer = os.path.join(tmpBaseDIR, tmpBaseName+'_thermalresample.kea')
-                    rsgislib.imageutils.resampleImage2Match(inputThermalImage, tmpThermStack, tmpThermalLayer, 'KEA', 'cubic', rsgislib.TYPE_32FLOAT)
+    #             tmpThermalLayer = tmpThermStack
+    #             if not rsgisUtils.doGDALLayersHaveSameProj(inputThermalImage, tmpThermStack):
+    #                 tmpThermalLayer = os.path.join(tmpBaseDIR, tmpBaseName+'_thermalresample.kea')
+    #                 rsgislib.imageutils.resampleImage2Match(inputThermalImage, tmpThermStack, tmpThermalLayer, 'KEA', 'cubic', rsgislib.TYPE_32FLOAT)
 
-                minCloudSize = 0
-                cloudBufferDistance = 150
-                shadowBufferDistance = 300
+    #             minCloudSize = 0
+    #             cloudBufferDistance = 150
+    #             shadowBufferDistance = 300
 
-                fmaskFilenames = fmask.config.FmaskFilenames()
-                fmaskFilenames.setTOAReflectanceFile(tmpReflStackOut)
-                fmaskFilenames.setThermalFile(tmpThermalLayer)
-                fmaskFilenames.setSaturationMask(inputSatImage)
-                fmaskFilenames.setOutputCloudMaskFile(tmpFMaskOut)
+    #             fmaskFilenames = fmask.config.FmaskFilenames()
+    #             fmaskFilenames.setTOAReflectanceFile(tmpReflStackOut)
+    #             fmaskFilenames.setThermalFile(tmpThermalLayer)
+    #             fmaskFilenames.setSaturationMask(inputSatImage)
+    #             fmaskFilenames.setOutputCloudMaskFile(tmpFMaskOut)
 
-                thermalGain1040um = self.b10RadMulti
-                thermalOffset1040um = self.b10RadAdd
-                thermalBand1040um = 0
-                thermalInfo = fmask.config.ThermalFileInfo(thermalBand1040um, thermalGain1040um, thermalOffset1040um, self.k1ConstB10, self.k2ConstB10)
+    #             thermalGain1040um = self.b10RadMulti
+    #             thermalOffset1040um = self.b10RadAdd
+    #             thermalBand1040um = 0
+    #             thermalInfo = fmask.config.ThermalFileInfo(thermalBand1040um, thermalGain1040um, thermalOffset1040um, self.k1ConstB10, self.k2ConstB10)
 
-                anglesInfo = fmask.config.AnglesFileInfo(inputViewAngleImg, 3, inputViewAngleImg, 2, inputViewAngleImg, 1, inputViewAngleImg, 0)
+    #             anglesInfo = fmask.config.AnglesFileInfo(inputViewAngleImg, 3, inputViewAngleImg, 2, inputViewAngleImg, 1, inputViewAngleImg, 0)
 
-                fmaskConfig = fmask.config.FmaskConfig(fmask.config.FMASK_LANDSAT8)
-                fmaskConfig.setTOARefScaling(float(scaleFactor))
-                fmaskConfig.setThermalInfo(thermalInfo)
-                fmaskConfig.setAnglesInfo(anglesInfo)
-                fmaskConfig.setKeepIntermediates(False)
-                fmaskConfig.setVerbose(True)
-                fmaskConfig.setTempDir(tmpBaseDIR)
-                fmaskConfig.setMinCloudSize(minCloudSize)
-                fmaskConfig.setEqn17CloudProbThresh(fmask.config.FmaskConfig.Eqn17CloudProbThresh)
-                fmaskConfig.setEqn20NirSnowThresh(fmask.config.FmaskConfig.Eqn20NirSnowThresh)
-                fmaskConfig.setEqn20GreenSnowThresh(fmask.config.FmaskConfig.Eqn20GreenSnowThresh)
+    #             fmaskConfig = fmask.config.FmaskConfig(fmask.config.FMASK_LANDSAT8)
+    #             fmaskConfig.setTOARefScaling(float(scaleFactor))
+    #             fmaskConfig.setThermalInfo(thermalInfo)
+    #             fmaskConfig.setAnglesInfo(anglesInfo)
+    #             fmaskConfig.setKeepIntermediates(False)
+    #             fmaskConfig.setVerbose(True)
+    #             fmaskConfig.setTempDir(tmpBaseDIR)
+    #             fmaskConfig.setMinCloudSize(minCloudSize)
+    #             fmaskConfig.setEqn17CloudProbThresh(fmask.config.FmaskConfig.Eqn17CloudProbThresh)
+    #             fmaskConfig.setEqn20NirSnowThresh(fmask.config.FmaskConfig.Eqn20NirSnowThresh)
+    #             fmaskConfig.setEqn20GreenSnowThresh(fmask.config.FmaskConfig.Eqn20GreenSnowThresh)
 
-                # Work out a suitable buffer size, in pixels, dependent on the resolution of the input TOA image
-                toaImgInfo = rios.fileinfo.ImageInfo(inputReflImage)
-                fmaskConfig.setCloudBufferSize(int(cloudBufferDistance / toaImgInfo.xRes))
-                fmaskConfig.setShadowBufferSize(int(shadowBufferDistance / toaImgInfo.xRes))
+    #             # Work out a suitable buffer size, in pixels, dependent on the resolution of the input TOA image
+    #             toaImgInfo = rios.fileinfo.ImageInfo(inputReflImage)
+    #             fmaskConfig.setCloudBufferSize(int(cloudBufferDistance / toaImgInfo.xRes))
+    #             fmaskConfig.setShadowBufferSize(int(shadowBufferDistance / toaImgInfo.xRes))
 
-                fmask.fmask.doFmask(fmaskFilenames, fmaskConfig)
+    #             fmask.fmask.doFmask(fmaskFilenames, fmaskConfig)
 
-                rsgislib.imagecalc.imageMath(tmpFMaskOut, outputImage, '(b1==2)?1:(b1==3)?2:0', outFormat, rsgislib.TYPE_8UINT)
+    #             rsgislib.imagecalc.imageMath(tmpFMaskOut, outputImage, '(b1==2)?1:(b1==3)?2:0', outFormat, rsgislib.TYPE_8UINT)
 
-            elif (cloud_msk_methods == 'LSMSK'):
-                if (self.bandQAFile == "") or (not os.path.exists(self.bandQAFile)):
-                    raise ARCSIException("The QA band is not present - cannot use this for cloud masking.")
+    #         elif (cloud_msk_methods == 'LSMSK'):
+    #             if (self.bandQAFile == "") or (not os.path.exists(self.bandQAFile)):
+    #                 raise ARCSIException("The QA band is not present - cannot use this for cloud masking.")
 
-                bqa_img_file = self.bandQAFile
-                if not rsgisUtils.doGDALLayersHaveSameProj(bqa_img_file, inputReflImage):
-                    bqa_img_file = os.path.join(tmpBaseDIR, tmpBaseName+'_BQA.kea')
-                    rsgislib.imageutils.resampleImage2Match(inputReflImage, self.bandQAFile, bqa_img_file, 'KEA',
-                                                            'nearestneighbour', rsgislib.TYPE_16UINT, noDataVal=0,
-                                                            multicore=False)
+    #             bqa_img_file = self.bandQAFile
+    #             if not rsgisUtils.doGDALLayersHaveSameProj(bqa_img_file, inputReflImage):
+    #                 bqa_img_file = os.path.join(tmpBaseDIR, tmpBaseName+'_BQA.kea')
+    #                 rsgislib.imageutils.resampleImage2Match(inputReflImage, self.bandQAFile, bqa_img_file, 'KEA',
+    #                                                         'nearestneighbour', rsgislib.TYPE_16UINT, noDataVal=0,
+    #                                                         multicore=False)
 
-                exp = '(b1==2800)||(b1==2804)||(b1==2808)||(b1==2812)||(b1==6896)||(b1==6900)||(b1==6904)||(b1==6908)?1:' \
-                      '(b1==2976)||(b1==2980)||(b1==2984)||(b1==2988)||(b1==3008)||(b1==3012)||(b1==3016)||(b1==3020)||' \
-                      '(b1==7072)||(b1==7076)||(b1==7080)||(b1==7084)||(b1==7104)||(b1==7108)||(b1==7112)||(b1==7116)?2:0'
-                rsgislib.imagecalc.imageMath(bqa_img_file, outputImage, exp, outFormat, rsgislib.TYPE_8UINT)
+    #             exp = '(b1==2800)||(b1==2804)||(b1==2808)||(b1==2812)||(b1==6896)||(b1==6900)||(b1==6904)||(b1==6908)?1:' \
+    #                   '(b1==2976)||(b1==2980)||(b1==2984)||(b1==2988)||(b1==3008)||(b1==3012)||(b1==3016)||(b1==3020)||' \
+    #                   '(b1==7072)||(b1==7076)||(b1==7080)||(b1==7084)||(b1==7104)||(b1==7108)||(b1==7112)||(b1==7116)?2:0'
+    #             rsgislib.imagecalc.imageMath(bqa_img_file, outputImage, exp, outFormat, rsgislib.TYPE_8UINT)
 
-            else:iwht
-                raise ARCSIException("Landsat only has FMASK and LSMSK cloud masking options; option provided is unknown.")
+    #         else:
+    #             raise ARCSIException("Landsat only has FMASK and LSMSK cloud masking options; option provided is unknown.")
 
-            if outFormat == 'KEA':
-                rsgislib.rastergis.populateStats(outputImage, True, True)
-                ratDataset = gdal.Open(outputImage, gdal.GA_Update)
-                red = rat.readColumn(ratDataset, 'Red')
-                green = rat.readColumn(ratDataset, 'Green')
-                blue = rat.readColumn(ratDataset, 'Blue')
-                ClassName = numpy.empty_like(red, dtype=numpy.dtype('a255'))
+    #         if outFormat == 'KEA':
+    #             rsgislib.rastergis.populateStats(outputImage, True, True)
+    #             ratDataset = gdal.Open(outputImage, gdal.GA_Update)
+    #             red = rat.readColumn(ratDataset, 'Red')
+    #             green = rat.readColumn(ratDataset, 'Green')
+    #             blue = rat.readColumn(ratDataset, 'Blue')
+    #             ClassName = numpy.empty_like(red, dtype=numpy.dtype('a255'))
 
-                red[0] = 0
-                green[0] = 0
-                blue[0] = 0
+    #             red[0] = 0
+    #             green[0] = 0
+    #             blue[0] = 0
 
-                if (red.shape[0] == 2) or (red.shape[0] == 3):
-                    red[1] = 0
-                    green[1] = 0
-                    blue[1] = 255
-                    ClassName[1] = 'Clouds'
+    #             if (red.shape[0] == 2) or (red.shape[0] == 3):
+    #                 red[1] = 0
+    #                 green[1] = 0
+    #                 blue[1] = 255
+    #                 ClassName[1] = 'Clouds'
 
-                    if (red.shape[0] == 3):
-                        red[2] = 0
-                        green[2] = 255
-                        blue[2] = 255
-                        ClassName[2] = 'Shadows'
+    #                 if (red.shape[0] == 3):
+    #                     red[2] = 0
+    #                     green[2] = 255
+    #                     blue[2] = 255
+    #                     ClassName[2] = 'Shadows'
 
-                rat.writeColumn(ratDataset, "Red", red)
-                rat.writeColumn(ratDataset, "Green", green)
-                rat.writeColumn(ratDataset, "Blue", blue)
-                rat.writeColumn(ratDataset, "ClassName", ClassName)
-                ratDataset = None
-            rsgislib.imageutils.copyProjFromImage(outputImage, inputReflImage)
+    #             rat.writeColumn(ratDataset, "Red", red)
+    #             rat.writeColumn(ratDataset, "Green", green)
+    #             rat.writeColumn(ratDataset, "Blue", blue)
+    #             rat.writeColumn(ratDataset, "ClassName", ClassName)
+    #             ratDataset = None
+    #         rsgislib.imageutils.copyProjFromImage(outputImage, inputReflImage)
 
-            if not self.debugMode:
-                if not tmpDIRExisted:
-                    shutil.rmtree(tmpBaseDIR, ignore_errors=True)
+    #         if not self.debugMode:
+    #             if not tmpDIRExisted:
+    #                 shutil.rmtree(tmpBaseDIR, ignore_errors=True)
 
-            return outputImage
-        except Exception as e:
-            raise e
+    #         return outputImage
+    #     except Exception as e:
+    #         raise e
 
     def createCloudMaskDataArray(self, inImgDataArr):
         return inImgDataArr
@@ -663,7 +748,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         return 5
 
     def calc6SCoefficients(self, aeroProfile, atmosProfile, grdRefl, surfaceAltitude, aotVal, useBRDF):
-        sixsCoeffs = numpy.zeros((7, 6), dtype=numpy.float32)
+        sixsCoeffs = numpy.zeros((242, 6), dtype=numpy.float32)
         # Set up 6S model
         s = Py6S.SixS()
         s.atmos_profile = atmosProfile
@@ -686,7 +771,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         s.aot550 = aotVal
 
         # Band 1
-        s.wavelength = Py6S.Wavelength(0.427, 0.4595, [0.000073, 0.001628, 0.024767, 0.254149, 0.908749, 0.977393, 0.986713, 0.993137, 0.982780, 0.905808, 0.226412, 0.036603, 0.002414, 0.000255])
+        s.wavelength = Py6S.Wavelength(.35559)
         s.run()
         sixsCoeffs[0,0] = float(s.outputs.values['coef_xa'])
         sixsCoeffs[0,1] = float(s.outputs.values['coef_xb'])
@@ -696,7 +781,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         sixsCoeffs[0,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 2
-        s.wavelength = Py6S.Wavelength(0.436, 0.5285, [0.000010, 0.000117, 0.000455, 0.001197, 0.006869, 0.027170, 0.271370, 0.723971, 0.903034, 0.909880, 0.889667, 0.877453, 0.879688, 0.891913, 0.848533, 0.828339, 0.868497, 0.912538, 0.931726, 0.954248, 0.956424, 0.978564, 0.989469, 0.968801, 0.988729, 0.967361, 0.966125, 0.981834, 0.963135, 0.996498, 0.844893, 0.190738, 0.005328, 0.001557, 0.000516, 0.000162, 0.000023, -0.000016])
+        s.wavelength = Py6S.Wavelength(.36576)
         s.run()
         sixsCoeffs[1,0] = float(s.outputs.values['coef_xa'])
         sixsCoeffs[1,1] = float(s.outputs.values['coef_xb'])
@@ -706,7 +791,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         sixsCoeffs[1,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 3
-        s.wavelength = Py6S.Wavelength(0.512, 0.6095, [-0.000046, 0.00011, 0.000648, 0.001332, 0.003446, 0.007024, 0.025513, 0.070551, 0.353885, 0.741205, 0.954627, 0.959215, 0.969873, 0.961397, 0.977001, 0.990784, 0.982642, 0.977765, 0.946245, 0.959038, 0.966447, 0.958314, 0.983397, 0.974522, 0.978208, 0.974392, 0.969181, 0.982956, 0.968886, 0.986657, 0.904478, 0.684974, 0.190467, 0.035393, 0.002574, 0.000394, -0.000194, -0.000292, -0.000348, -0.000351])
+        s.wavelength = Py6S.Wavelength(.37594)
         s.run()
         sixsCoeffs[2,0] = float(s.outputs.values['coef_xa'])
         sixsCoeffs[2,1] = float(s.outputs.values['coef_xb'])
@@ -716,7 +801,7 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         sixsCoeffs[2,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 4
-        s.wavelength = Py6S.Wavelength(0.625, 0.690, [-0.000342, 0.000895, 0.007197, 0.030432, 0.299778, 0.764443, 0.950823, 0.951831, 0.984173, 0.983434, 0.959441, 0.955548, 0.981688, 0.992388, 0.97696, 0.98108, 0.980678, 0.962154, 0.966928, 0.848855, 0.123946, 0.017702, 0.001402, 0.000117, -0.000376, -0.000458, -0.000429])
+        s.wavelength = Py6S.Wavelength(.38611)
         s.run()
         sixsCoeffs[3,0] = float(s.outputs.values['coef_xa'])
         sixsCoeffs[3,1] = float(s.outputs.values['coef_xb'])
@@ -726,17 +811,17 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         sixsCoeffs[3,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 5
-        s.wavelength = Py6S.Wavelength(0.829, 0.899, [-0.000034, 0.000050, 0.000314, 0.000719, 0.002107, 0.004744, 0.017346, 0.048191, 0.249733, 0.582623, 0.960215, 0.973133, 1.000000, 0.980733, 0.957357, 0.947044, 0.948450, 0.950632, 0.969821, 0.891066, 0.448364, 0.174619, 0.034532, 0.012440, 0.002944, 0.001192, 0.000241, 0.000044, -0.000084])
+        s.wavelength = Py6S.Wavelength(.39629)
         s.run()
-        sixsCoeffs[4,0] = float(s.outputs.values['coef_xa'])
-        sixsCoeffs[4,1] = float(s.outputs.values['coef_xb'])
-        sixsCoeffs[4,2] = float(s.outputs.values['coef_xc'])
-        sixsCoeffs[4,3] = float(s.outputs.values['direct_solar_irradiance'])
-        sixsCoeffs[4,4] = float(s.outputs.values['diffuse_solar_irradiance'])
-        sixsCoeffs[4,5] = float(s.outputs.values['environmental_irradiance'])
+        sixsCoeffs[1,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[1,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[1,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[1,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[1,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[1,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 6
-        s.wavelength = Py6S.Wavelength(1.515, 1.6975, [-0.00002, 0.00015, 0.00047, 0.00076, 0.00137, 0.00186, 0.00288, 0.00377, 0.00553, 0.00732, 0.01099, 0.01430, 0.02183, 0.02995, 0.04786, 0.06573, 0.10189, 0.13864, 0.22026, 0.29136, 0.42147, 0.52568, 0.67668, 0.75477, 0.85407, 0.89183, 0.91301, 0.92295, 0.92641, 0.92368, 0.92283, 0.92206, 0.92661, 0.94253, 0.94618, 0.94701, 0.95286, 0.94967, 0.95905, 0.96005, 0.96147, 0.96018, 0.96470, 0.96931, 0.97691, 0.98126, 0.98861, 0.99802, 0.99964, 0.99344, 0.96713, 0.93620, 0.84097, 0.75189, 0.57323, 0.45197, 0.29175, 0.21115, 0.12846, 0.09074, 0.05275, 0.03731, 0.02250, 0.01605, 0.00959, 0.00688, 0.00426, 0.00306, 0.00178, 0.00124, 0.00068, 0.00041, 0.00011, -0.00003])
+        s.wavelength = Py6S.Wavelength(.40646)
         s.run()
         sixsCoeffs[5,0] = float(s.outputs.values['coef_xa'])
         sixsCoeffs[5,1] = float(s.outputs.values['coef_xb'])
@@ -746,14 +831,14 @@ class ARCSILandsat8Sensor (ARCSIAbstractSensor):
         sixsCoeffs[5,5] = float(s.outputs.values['environmental_irradiance'])
 
          # Band 7
-        s.wavelength = Py6S.Wavelength(2.037, 2.3545, [-0.000010, 0.000083, 0.000240, 0.000368, 0.000599, 0.000814, 0.001222, 0.001546, 0.002187, 0.002696, 0.003733, 0.004627, 0.006337, 0.007996, 0.011005, 0.013610, 0.018899, 0.023121, 0.032071, 0.040206, 0.056429, 0.070409, 0.100640, 0.128292, 0.179714, 0.227234, 0.311347, 0.377044, 0.488816, 0.554715, 0.663067, 0.722284, 0.792667, 0.836001, 0.867845, 0.886411, 0.906527, 0.911091, 0.929693, 0.936544, 0.942952, 0.943194, 0.948776, 0.949643, 0.956635, 0.947423, 0.950874, 0.947014, 0.957717, 0.946412, 0.951641, 0.948644, 0.940311, 0.947923, 0.938737, 0.941859, 0.944482, 0.951661, 0.939939, 0.935493, 0.938955, 0.929162, 0.930508, 0.933908, 0.936472, 0.933523, 0.946217, 0.955661, 0.963135, 0.964365, 0.962905, 0.962473, 0.957814, 0.958041, 0.951706, 0.960212, 0.947696, 0.959060, 0.955750, 0.953245, 0.966786, 0.960173, 0.977637, 0.982760, 0.985056, 0.999600, 0.992469, 0.995894, 0.997261, 0.991127, 0.986037, 0.984536, 0.972794, 0.976540, 0.974409, 0.967502, 0.955095, 0.955588, 0.922405, 0.894940, 0.823876, 0.744025, 0.602539, 0.502693, 0.355569, 0.278260, 0.186151, 0.141435, 0.092029, 0.069276, 0.046332, 0.035634, 0.024000, 0.018688, 0.012930, 0.010155, 0.007088, 0.005643, 0.003903, 0.003025, 0.002047, 0.001554, 0.000974, 0.000680, 0.000320, 0.000119, -0.000134, -0.000263])
+        s.wavelength = Py6S.Wavelength(.41664)
         s.run()
-        sixsCoeffs[6,0] = float(s.outputs.values['coef_xa'])
-        sixsCoeffs[6,1] = float(s.outputs.values['coef_xb'])
-        sixsCoeffs[6,2] = float(s.outputs.values['coef_xc'])
-        sixsCoeffs[6,3] = float(s.outputs.values['direct_solar_irradiance'])
-        sixsCoeffs[6,4] = float(s.outputs.values['diffuse_solar_irradiance'])
-        sixsCoeffs[6,5] = float(s.outputs.values['environmental_irradiance'])
+        sixsCoeffs[1,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[1,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[1,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[1,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[1,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[1,5] = float(s.outputs.values['environmental_irradiance'])
 
         return sixsCoeffs
 

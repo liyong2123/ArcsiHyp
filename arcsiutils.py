@@ -531,10 +531,12 @@ class ARCSISensorFactory(object):
         if sensor == 'ls7':
             from arcsilib.arcsisensorlandsat7 import ARCSILandsat7Sensor
             sensorClass = ARCSILandsat7Sensor(debugMode, inputImage)
+        elif sensor == 'hyp':
+            from arcsilib.arcsisensorhyperion import ARCSIHyperionSensor
+            sensorClass = ARCSIHyperionSensor(debugMode, inputImage)
         elif sensor == 'ls5tm':
             from arcsilib.arcsisensorlandsat5tm import ARCSILandsat5TMSensor
             sensorClass = ARCSILandsat5TMSensor(debugMode, inputImage)
-            
         elif sensor == 'ls4tm':
             from arcsilib.arcsisensorlandsat4tm import ARCSILandsat4TMSensor
             sensorClass = ARCSILandsat4TMSensor(debugMode, inputImage)

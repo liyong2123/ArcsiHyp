@@ -304,9 +304,9 @@ def prepParametersObj(inputHeader, inputImage, cloudMaskUsrImg, sensorStr, inWKT
         print("Get aero profile from image...")
         aeroProfileMode = int(rsgislib.imagecalc.getImageBandModeInEnv(paramsObj.aeroProfileOptionImg, 1, 1, None, paramsObj.sensorClass.lonTL, paramsObj.sensorClass.lonBR, paramsObj.sensorClass.latBR, paramsObj.sensorClass.latTL)[0])
 
-        if aeroProfileMode is 1:
+        if aeroProfileMode == 1:
             paramsObj.aeroProfileOption = "Maritime"
-        elif aeroProfileMode is 2:
+        elif aeroProfileMode == 2:
             paramsObj.aeroProfileOption = "Continental"
         else:
             raise ARCSIException("The aerosol profile from the input image was not recognised.")
@@ -316,19 +316,19 @@ def prepParametersObj(inputHeader, inputImage, cloudMaskUsrImg, sensorStr, inWKT
         print("Get atmos profile from image...")
         atmosProfileMode = int(rsgislib.imagecalc.getImageBandModeInEnv(paramsObj.atmosProfileOptionImg, 1, 1, None, paramsObj.sensorClass.lonTL, paramsObj.sensorClass.lonBR, paramsObj.sensorClass.latBR, paramsObj.sensorClass.latTL)[0])
         summerWinter = arcsiUtils.isSummerOrWinter(paramsObj.sensorClass.latCentre, paramsObj.sensorClass.lonCentre, paramsObj.sensorClass.acquisitionTime )
-        if atmosProfileMode is 1:
+        if atmosProfileMode == 1:
             paramsObj.atmosProfileOption = "Tropical"
-        elif atmosProfileMode is 2:
-            if summerWinter is 1:
+        elif atmosProfileMode == 2:
+            if summerWinter == 1:
                 paramsObj.atmosProfileOption = "MidlatitudeSummer"
-            elif summerWinter is 2:
+            elif summerWinter == 2:
                 paramsObj.atmosProfileOption = "MidlatitudeWinter"
             else:
                 raise ARCSIException("Not recognised as being summer or winter.")
-        elif atmosProfileMode is 3:
-            if summerWinter is 1:
+        elif atmosProfileMode == 3:
+            if summerWinter == 1:
                 paramsObj.atmosProfileOption = "SubarcticSummer"
-            elif summerWinter is 2:
+            elif summerWinter == 2:
                 paramsObj.atmosProfileOption = "SubarcticWinter"
             else:
                 raise ARCSIException("Not recognised as being summer or winter.")
@@ -1359,6 +1359,7 @@ def runARCSI(inputHeader, inputImage, cloudMaskUsrImg, sensorStr, inWKTFile, out
         if debugMode:
             raise
     except Exception as e:
+        import inspect
         print('Input Header: \'' + inputHeader + '\'', file=sys.stderr)
         if (paramsObj is not None) and (paramsObj.outBaseName is not None):
             print('Output Basename: \'' + paramsObj.outBaseName + '\'', file=sys.stderr)
@@ -1584,6 +1585,8 @@ def print2ConsoleListSensors():
     print("\tRapideye      | \'rapideye\'  | RAD, TOA, DOSAOT, DOSAOTSGL, SREF, STDSREF, DOS, TOPOSHADOW, METADATA")
     print("\tWorldView2    | \'wv2\'       | RAD, TOA, DOSAOT, DOSAOTSGL, SREF, STDSREF, DOS, TOPOSHADOW, METADATA")
     print("\tSPOT5         | \'spot5\'     | RAD, TOA, DOSAOT, DOSAOTSGL, SREF, STDSREF, DOS, TOPOSHADOW, METADATA")
+    print("\tHyperion      | \'hyp\'       | RAD, TOA, DOSAOT, DOSAOTSGL, SREF, STDSREF, DOS, TOPOSHADOW, FOOTPRINT, METADATA")
+
     print("\t----------------------------------------------------------------------------------------------------------------------------------")
 
 def print2ConsoleListProductDescription(product):
