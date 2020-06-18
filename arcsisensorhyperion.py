@@ -119,6 +119,10 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         self.band15File = ""
         self.band16File = ""
         self.band17File = ""
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 132b15512466ca006087acb05fc314714a1fe1da
 
         self.vnir_rad_scale = 0.0
         self.swir_rad_scale = 0.0
@@ -220,9 +224,6 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         self.gridCellSizeTherm = 0.0
 
     def extractHeaderParameters(self, inputHeader, wktStr):
-        """
-        Understands and parses the Hyperion MTL header files
-        """
         try:
             if not self.userSpInputImage is None:
                 raise ARCSIException("Hyperion sensor cannot accept a user specified image file - only the images in the header file will be used.")
