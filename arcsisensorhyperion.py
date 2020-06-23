@@ -101,6 +101,8 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
     """
     def __init__(self, debugMode, inputImage):
         ARCSIAbstractSensor.__init__(self, debugMode, inputImage)
+        #Change this to array
+
         self.sensor = "hyp"
         self.band1File = ""
         self.band2File = ""
@@ -519,7 +521,8 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         outputThermalImage = None
         bandDefnSeq = list()
         lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'addVal', 'multiVal'])
-        bandDefnSeq.append(lsBand(bandName="Band1", fileName=self. , bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
+        #Change this to for loop?
+        bandDefnSeq.append(lsBand(bandName="Band1", fileName=self.band1File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
         bandDefnSeq.append(lsBand(bandName="Band2", fileName=self.band2File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
         bandDefnSeq.append(lsBand(bandName="Band3", fileName=self.band3File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
         bandDefnSeq.append(lsBand(bandName="Band4", fileName=self.band4File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
@@ -812,12 +815,12 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         # Band 5
         s.wavelength = Py6S.Wavelength(.39629)
         s.run()
-        sixsCoeffs[1,0] = float(s.outputs.values['coef_xa'])
-        sixsCoeffs[1,1] = float(s.outputs.values['coef_xb'])
-        sixsCoeffs[1,2] = float(s.outputs.values['coef_xc'])
-        sixsCoeffs[1,3] = float(s.outputs.values['direct_solar_irradiance'])
-        sixsCoeffs[1,4] = float(s.outputs.values['diffuse_solar_irradiance'])
-        sixsCoeffs[1,5] = float(s.outputs.values['environmental_irradiance'])
+        sixsCoeffs[4,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[4,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[4,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[4,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[4,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[4,5] = float(s.outputs.values['environmental_irradiance'])
 
         # Band 6
         s.wavelength = Py6S.Wavelength(.40646)
@@ -832,12 +835,105 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
          # Band 7
         s.wavelength = Py6S.Wavelength(.41664)
         s.run()
-        sixsCoeffs[1,0] = float(s.outputs.values['coef_xa'])
-        sixsCoeffs[1,1] = float(s.outputs.values['coef_xb'])
-        sixsCoeffs[1,2] = float(s.outputs.values['coef_xc'])
-        sixsCoeffs[1,3] = float(s.outputs.values['direct_solar_irradiance'])
-        sixsCoeffs[1,4] = float(s.outputs.values['diffuse_solar_irradiance'])
-        sixsCoeffs[1,5] = float(s.outputs.values['environmental_irradiance'])
+        sixsCoeffs[6,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[6,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[6,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[6,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[6,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[6,5] = float(s.outputs.values['environmental_irradiance'])
+        #band8
+        s.wavelength = Py6S.Wavelength(.42682)
+        s.run()
+        sixsCoeffs[7,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[7,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[7,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[7,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[7,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[7,5] = float(s.outputs.values['environmental_irradiance'])
+        #band9
+        s.wavelength = Py6S.Wavelength(.43699)
+        s.run()
+        sixsCoeffs[8,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[8,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[8,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[8,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[8,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[8,5] = float(s.outputs.values['environmental_irradiance'])
+        #band10
+        s.wavelength = Py6S.Wavelength(.44717)
+        s.run()
+        sixsCoeffs[9,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[9,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[9,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[9,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[9,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[9,5] = float(s.outputs.values['environmental_irradiance'])
+        #band11
+        s.wavelength = Py6S.Wavelength(.45734)
+        s.run()
+        sixsCoeffs[10,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[10,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[10,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[10,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[10,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[10,5] = float(s.outputs.values['environmental_irradiance'])
+        #band12
+        s.wavelength = Py6S.Wavelength(.46752)
+        s.run()
+        sixsCoeffs[11,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[11,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[11,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[11,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[11,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[11,5] = float(s.outputs.values['environmental_irradiance'])
+        #band13
+        s.wavelength = Py6S.Wavelength(.47769)
+        s.run()
+        sixsCoeffs[12,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[12,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[12,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[12,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[12,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[12,5] = float(s.outputs.values['environmental_irradiance'])
+        #band14
+        s.wavelength = Py6S.Wavelength(.48787)
+        s.run()
+        sixsCoeffs[13,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[13,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[13,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[13,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[13,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[13,5] = float(s.outputs.values['environmental_irradiance'])
+        #band15
+        s.wavelength = Py6S.Wavelength(.49804)
+        s.run()
+        sixsCoeffs[14,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[14,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[14,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[14,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[14,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[14,5] = float(s.outputs.values['environmental_irradiance'])
+        #band16
+        s.wavelength = Py6S.Wavelength(.50822)
+        s.run()
+        sixsCoeffs[15,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[15,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[15,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[15,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[15,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[15,5] = float(s.outputs.values['environmental_irradiance'])
+        #band17
+        s.wavelength = Py6S.Wavelength(.51839)
+        s.run()
+        sixsCoeffs[16,0] = float(s.outputs.values['coef_xa'])
+        sixsCoeffs[16,1] = float(s.outputs.values['coef_xb'])
+        sixsCoeffs[16,2] = float(s.outputs.values['coef_xc'])
+        sixsCoeffs[16,3] = float(s.outputs.values['direct_solar_irradiance'])
+        sixsCoeffs[16,4] = float(s.outputs.values['diffuse_solar_irradiance'])
+        sixsCoeffs[16,5] = float(s.outputs.values['environmental_irradiance'])
+
+
+
 
         return sixsCoeffs
 
@@ -856,6 +952,18 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=5, aX=float(sixsCoeffs[4,0]), bX=float(sixsCoeffs[4,1]), cX=float(sixsCoeffs[4,2]), DirIrr=float(sixsCoeffs[4,3]), DifIrr=float(sixsCoeffs[4,4]), EnvIrr=float(sixsCoeffs[4,5])))
         imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=6, aX=float(sixsCoeffs[5,0]), bX=float(sixsCoeffs[5,1]), cX=float(sixsCoeffs[5,2]), DirIrr=float(sixsCoeffs[5,3]), DifIrr=float(sixsCoeffs[5,4]), EnvIrr=float(sixsCoeffs[5,5])))
         imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=7, aX=float(sixsCoeffs[6,0]), bX=float(sixsCoeffs[6,1]), cX=float(sixsCoeffs[6,2]), DirIrr=float(sixsCoeffs[6,3]), DifIrr=float(sixsCoeffs[6,4]), EnvIrr=float(sixsCoeffs[6,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=8, aX=float(sixsCoeffs[7,0]), bX=float(sixsCoeffs[7,1]), cX=float(sixsCoeffs[7,2]), DirIrr=float(sixsCoeffs[7,3]), DifIrr=float(sixsCoeffs[7,4]), EnvIrr=float(sixsCoeffs[7,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=9, aX=float(sixsCoeffs[8,0]), bX=float(sixsCoeffs[8,1]), cX=float(sixsCoeffs[8,2]), DirIrr=float(sixsCoeffs[8,3]), DifIrr=float(sixsCoeffs[8,4]), EnvIrr=float(sixsCoeffs[8,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=10, aX=float(sixsCoeffs[9,0]), bX=float(sixsCoeffs[9,1]), cX=float(sixsCoeffs[9,2]), DirIrr=float(sixsCoeffs[9,3]), DifIrr=float(sixsCoeffs[9,4]), EnvIrr=float(sixsCoeffs[9,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=11, aX=float(sixsCoeffs[10,0]), bX=float(sixsCoeffs[10,1]), cX=float(sixsCoeffs[10,2]), DirIrr=float(sixsCoeffs[10,3]), DifIrr=float(sixsCoeffs[10,4]), EnvIrr=float(sixsCoeffs[10,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=12, aX=float(sixsCoeffs[11,0]), bX=float(sixsCoeffs[11,1]), cX=float(sixsCoeffs[11,2]), DirIrr=float(sixsCoeffs[11,3]), DifIrr=float(sixsCoeffs[11,4]), EnvIrr=float(sixsCoeffs[11,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=13, aX=float(sixsCoeffs[12,0]), bX=float(sixsCoeffs[12,1]), cX=float(sixsCoeffs[12,2]), DirIrr=float(sixsCoeffs[12,3]), DifIrr=float(sixsCoeffs[12,4]), EnvIrr=float(sixsCoeffs[12,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=14, aX=float(sixsCoeffs[13,0]), bX=float(sixsCoeffs[13,1]), cX=float(sixsCoeffs[13,2]), DirIrr=float(sixsCoeffs[13,3]), DifIrr=float(sixsCoeffs[13,4]), EnvIrr=float(sixsCoeffs[13,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=15, aX=float(sixsCoeffs[14,0]), bX=float(sixsCoeffs[14,1]), cX=float(sixsCoeffs[14,2]), DirIrr=float(sixsCoeffs[14,3]), DifIrr=float(sixsCoeffs[14,4]), EnvIrr=float(sixsCoeffs[14,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=16, aX=float(sixsCoeffs[15,0]), bX=float(sixsCoeffs[15,1]), cX=float(sixsCoeffs[15,2]), DirIrr=float(sixsCoeffs[15,3]), DifIrr=float(sixsCoeffs[15,4]), EnvIrr=float(sixsCoeffs[15,5])))
+        imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=17, aX=float(sixsCoeffs[16,0]), bX=float(sixsCoeffs[16,1]), cX=float(sixsCoeffs[16,2]), DirIrr=float(sixsCoeffs[16,3]), DifIrr=float(sixsCoeffs[16,4]), EnvIrr=float(sixsCoeffs[16,5])))
+        #imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=18, aX=float(sixsCoeffs[17,0]), bX=float(sixsCoeffs[17,1]), cX=float(sixsCoeffs[17,2]), DirIrr=float(sixsCoeffs[17,3]), DifIrr=float(sixsCoeffs[17,4]), EnvIrr=float(sixsCoeffs[17,5])))
+
 
         rsgislib.imagecalibration.apply6SCoeffSingleParam(inputRadImage, outputImage, outFormat, rsgislib.TYPE_16UINT, scaleFactor, 0, True, imgBandCoeffs)
         return outputImage
@@ -881,6 +989,18 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
                 imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=5, aX=float(sixsCoeffs[4,0]), bX=float(sixsCoeffs[4,1]), cX=float(sixsCoeffs[4,2]), DirIrr=float(sixsCoeffs[4,3]), DifIrr=float(sixsCoeffs[4,4]), EnvIrr=float(sixsCoeffs[4,5])))
                 imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=6, aX=float(sixsCoeffs[5,0]), bX=float(sixsCoeffs[5,1]), cX=float(sixsCoeffs[5,2]), DirIrr=float(sixsCoeffs[5,3]), DifIrr=float(sixsCoeffs[5,4]), EnvIrr=float(sixsCoeffs[5,5])))
                 imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=7, aX=float(sixsCoeffs[6,0]), bX=float(sixsCoeffs[6,1]), cX=float(sixsCoeffs[6,2]), DirIrr=float(sixsCoeffs[6,3]), DifIrr=float(sixsCoeffs[6,4]), EnvIrr=float(sixsCoeffs[6,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=8, aX=float(sixsCoeffs[7,0]), bX=float(sixsCoeffs[7,1]), cX=float(sixsCoeffs[7,2]), DirIrr=float(sixsCoeffs[7,3]), DifIrr=float(sixsCoeffs[7,4]), EnvIrr=float(sixsCoeffs[7,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=9, aX=float(sixsCoeffs[8,0]), bX=float(sixsCoeffs[8,1]), cX=float(sixsCoeffs[8,2]), DirIrr=float(sixsCoeffs[8,3]), DifIrr=float(sixsCoeffs[8,4]), EnvIrr=float(sixsCoeffs[8,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=10, aX=float(sixsCoeffs[9,0]), bX=float(sixsCoeffs[9,1]), cX=float(sixsCoeffs[9,2]), DirIrr=float(sixsCoeffs[9,3]), DifIrr=float(sixsCoeffs[9,4]), EnvIrr=float(sixsCoeffs[9,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=11, aX=float(sixsCoeffs[10,0]), bX=float(sixsCoeffs[10,1]), cX=float(sixsCoeffs[10,2]), DirIrr=float(sixsCoeffs[10,3]), DifIrr=float(sixsCoeffs[10,4]), EnvIrr=float(sixsCoeffs[10,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=12, aX=float(sixsCoeffs[11,0]), bX=float(sixsCoeffs[11,1]), cX=float(sixsCoeffs[11,2]), DirIrr=float(sixsCoeffs[11,3]), DifIrr=float(sixsCoeffs[11,4]), EnvIrr=float(sixsCoeffs[11,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=13, aX=float(sixsCoeffs[12,0]), bX=float(sixsCoeffs[12,1]), cX=float(sixsCoeffs[12,2]), DirIrr=float(sixsCoeffs[12,3]), DifIrr=float(sixsCoeffs[12,4]), EnvIrr=float(sixsCoeffs[12,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=14, aX=float(sixsCoeffs[13,0]), bX=float(sixsCoeffs[13,1]), cX=float(sixsCoeffs[13,2]), DirIrr=float(sixsCoeffs[13,3]), DifIrr=float(sixsCoeffs[13,4]), EnvIrr=float(sixsCoeffs[13,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=15, aX=float(sixsCoeffs[14,0]), bX=float(sixsCoeffs[14,1]), cX=float(sixsCoeffs[14,2]), DirIrr=float(sixsCoeffs[14,3]), DifIrr=float(sixsCoeffs[14,4]), EnvIrr=float(sixsCoeffs[14,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=16, aX=float(sixsCoeffs[15,0]), bX=float(sixsCoeffs[15,1]), cX=float(sixsCoeffs[15,2]), DirIrr=float(sixsCoeffs[15,3]), DifIrr=float(sixsCoeffs[15,4]), EnvIrr=float(sixsCoeffs[15,5])))
+                imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=17, aX=float(sixsCoeffs[16,0]), bX=float(sixsCoeffs[16,1]), cX=float(sixsCoeffs[16,2]), DirIrr=float(sixsCoeffs[16,3]), DifIrr=float(sixsCoeffs[16,4]), EnvIrr=float(sixsCoeffs[16,5])))
+                #imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=18, aX=float(sixsCoeffs[17,0]), bX=float(sixsCoeffs[17,1]), cX=float(sixsCoeffs[17,2]), DirIrr=float(sixsCoeffs[17,3]), DifIrr=float(sixsCoeffs[17,4]), EnvIrr=float(sixsCoeffs[17,5])))
+
 
                 elevCoeffs.append(rsgislib.imagecalibration.ElevLUTFeat(Elev=float(elevVal), Coeffs=imgBandCoeffs))
 
@@ -912,6 +1032,19 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
                     imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=5, aX=float(sixsCoeffs[4,0]), bX=float(sixsCoeffs[4,1]), cX=float(sixsCoeffs[4,2]), DirIrr=float(sixsCoeffs[4,3]), DifIrr=float(sixsCoeffs[4,4]), EnvIrr=float(sixsCoeffs[4,5])))
                     imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=6, aX=float(sixsCoeffs[5,0]), bX=float(sixsCoeffs[5,1]), cX=float(sixsCoeffs[5,2]), DirIrr=float(sixsCoeffs[5,3]), DifIrr=float(sixsCoeffs[5,4]), EnvIrr=float(sixsCoeffs[5,5])))
                     imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=7, aX=float(sixsCoeffs[6,0]), bX=float(sixsCoeffs[6,1]), cX=float(sixsCoeffs[6,2]), DirIrr=float(sixsCoeffs[6,3]), DifIrr=float(sixsCoeffs[6,4]), EnvIrr=float(sixsCoeffs[6,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=8, aX=float(sixsCoeffs[7,0]), bX=float(sixsCoeffs[7,1]), cX=float(sixsCoeffs[7,2]), DirIrr=float(sixsCoeffs[7,3]), DifIrr=float(sixsCoeffs[7,4]), EnvIrr=float(sixsCoeffs[7,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=9, aX=float(sixsCoeffs[8,0]), bX=float(sixsCoeffs[8,1]), cX=float(sixsCoeffs[8,2]), DirIrr=float(sixsCoeffs[8,3]), DifIrr=float(sixsCoeffs[8,4]), EnvIrr=float(sixsCoeffs[8,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=10, aX=float(sixsCoeffs[9,0]), bX=float(sixsCoeffs[9,1]), cX=float(sixsCoeffs[9,2]), DirIrr=float(sixsCoeffs[9,3]), DifIrr=float(sixsCoeffs[9,4]), EnvIrr=float(sixsCoeffs[9,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=11, aX=float(sixsCoeffs[10,0]), bX=float(sixsCoeffs[10,1]), cX=float(sixsCoeffs[10,2]), DirIrr=float(sixsCoeffs[10,3]), DifIrr=float(sixsCoeffs[10,4]), EnvIrr=float(sixsCoeffs[10,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=12, aX=float(sixsCoeffs[11,0]), bX=float(sixsCoeffs[11,1]), cX=float(sixsCoeffs[11,2]), DirIrr=float(sixsCoeffs[11,3]), DifIrr=float(sixsCoeffs[11,4]), EnvIrr=float(sixsCoeffs[11,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=13, aX=float(sixsCoeffs[12,0]), bX=float(sixsCoeffs[12,1]), cX=float(sixsCoeffs[12,2]), DirIrr=float(sixsCoeffs[12,3]), DifIrr=float(sixsCoeffs[12,4]), EnvIrr=float(sixsCoeffs[12,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=14, aX=float(sixsCoeffs[13,0]), bX=float(sixsCoeffs[13,1]), cX=float(sixsCoeffs[13,2]), DirIrr=float(sixsCoeffs[13,3]), DifIrr=float(sixsCoeffs[13,4]), EnvIrr=float(sixsCoeffs[13,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=15, aX=float(sixsCoeffs[14,0]), bX=float(sixsCoeffs[14,1]), cX=float(sixsCoeffs[14,2]), DirIrr=float(sixsCoeffs[14,3]), DifIrr=float(sixsCoeffs[14,4]), EnvIrr=float(sixsCoeffs[14,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=16, aX=float(sixsCoeffs[15,0]), bX=float(sixsCoeffs[15,1]), cX=float(sixsCoeffs[15,2]), DirIrr=float(sixsCoeffs[15,3]), DifIrr=float(sixsCoeffs[15,4]), EnvIrr=float(sixsCoeffs[15,5])))
+                    imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=17, aX=float(sixsCoeffs[16,0]), bX=float(sixsCoeffs[16,1]), cX=float(sixsCoeffs[16,2]), DirIrr=float(sixsCoeffs[16,3]), DifIrr=float(sixsCoeffs[16,4]), EnvIrr=float(sixsCoeffs[16,5])))
+                    #imgBandCoeffs.append(rsgislib.imagecalibration.Band6SCoeff(band=18, aX=float(sixsCoeffs[17,0]), bX=float(sixsCoeffs[17,1]), cX=float(sixsCoeffs[17,2]), DirIrr=float(sixsCoeffs[17,3]), DifIrr=float(sixsCoeffs[17,4]), EnvIrr=float(sixsCoeffs[17,5])))
+
+
                     aot6SCoeffsOut.append(rsgislib.imagecalibration.AOTLUTFeat(AOT=float(aotVal), Coeffs=imgBandCoeffs))
                 elevAOTCoeffs.append(rsgislib.imagecalibration.ElevLUTFeat(Elev=float(elevVal), Coeffs=aot6SCoeffsOut))
 
