@@ -547,26 +547,19 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
 
         return outputReflImage, outputThermalImage
 
-    # def generateImageSaturationMask(self, outputPath, outputName, outFormat):
-    #     print("Generate Saturation Image")
-    #     outputImage = os.path.join(outputPath, outputName)
+    def generateImageSaturationMask(self, outputPath, outputName, outFormat):
+        print("Generate Saturation Image")
+        outputImage = os.path.join(outputPath, outputName)
 
-    #     lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'satVal'])
-    #     bandDefnSeq = list()
-    #     bandDefnSeq.append(lsBand(bandName="Coastal", fileName=self.band1File, bandIndex=1, satVal=self.b1CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="Blue", fileName=self.band2File, bandIndex=1, satVal=self.b2CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="Green", fileName=self.band3File, bandIndex=1, satVal=self.b3CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="Red", fileName=self.band4File, bandIndex=1, satVal=self.b4CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="NIR", fileName=self.band5File, bandIndex=1, satVal=self.b5CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="SWIR1", fileName=self.band6File, bandIndex=1, satVal=self.b6CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="SWIR2", fileName=self.band7File, bandIndex=1, satVal=self.b7CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="ThermalB10", fileName=self.band10File, bandIndex=1, satVal=self.b10CalMax))
-    #     bandDefnSeq.append(lsBand(bandName="ThermalB11", fileName=self.band11File, bandIndex=1, satVal=self.b11CalMax))
+        lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'satVal'])
+        bandDefnSeq = list()
+        for i in range(242):
+            bandDefnSeq.append(lsBand(bandName="Band%s"%str(i+1), fileName=self.bandFile[i], bandIndex=1, satVal=self.b1CalMax))
 
-    #     rsgislib.imagecalibration.saturatedPixelsMask(outputImage, outFormat, bandDefnSeq)
+        rsgislib.imagecalibration.saturatedPixelsMask(outputImage, outFormat, bandDefnSeq)
 
-    #     return outputImage
-# NO THERMALFOR EO1
+        return outputImage
+#NO THERMALFOR EO1
     # def convertThermalToBrightness(self, inputRadImage, outputPath, outputName, outFormat, scaleFactor):
     #     print("Converting to Thermal Brightness")
     #     outputThermalImage = os.path.join(outputPath, outputName)
@@ -920,14 +913,14 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         s.atmos_corr = Py6S.AtmosCorr.AtmosCorrLambertianFromRadiance(200)
         s.aot550 = aotVal
 
-        # Band 2 (Blue!)
-        s.wavelength = Py6S.Wavelength(0.436, 0.5285, [0.000010, 0.000117, 0.000455, 0.001197, 0.006869, 0.027170, 0.271370, 0.723971, 0.903034, 0.909880, 0.889667, 0.877453, 0.879688, 0.891913, 0.848533, 0.828339, 0.868497, 0.912538, 0.931726, 0.954248, 0.956424, 0.978564, 0.989469, 0.968801, 0.988729, 0.967361, 0.966125, 0.981834, 0.963135, 0.996498, 0.844893, 0.190738, 0.005328, 0.001557, 0.000516, 0.000162, 0.000023, -0.000016])
+        # Band 2 (Blue!) -- For Hyperion Band 16
+        s.wavelength = Py6S.Wavelength(self.wave[15])
         s.run()
         aX = float(s.outputs.values['coef_xa'])
         bX = float(s.outputs.values['coef_xb'])
         cX = float(s.outputs.values['coef_xc'])
 
-        tmpVal = (aX*radBlueVal)-bX;
+        tmpVal = (aX*radBlueVal)-bX
         reflBlueVal = tmpVal/(1.0+cX*tmpVal)
         outDist = math.sqrt(math.pow((reflBlueVal - predBlueVal),2))
         print("\taX: ", aX, " bX: ", bX, " cX: ", cX, "     Dist = ", outDist)
@@ -1183,18 +1176,20 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         try:
             return self.estimateSingleAOTFromDOSBandImpl(radianceImage, toaImage, inputDEMFile, tmpPath, outputName, outFormat, aeroProfile, atmosProfile, grdRefl, minAOT, maxAOT, dosOutRefl, 2)
         except Exception as e:
-            raise
+            raise e
 
     def setBandNames(self, imageFile):
         dataset = gdal.Open(imageFile, gdal.GA_Update)
-        dataset.GetRasterBand(1).SetDescription("Coastal")
-        dataset.GetRasterBand(2).SetDescription("Blue")
-        dataset.GetRasterBand(3).SetDescription("Green")
-        dataset.GetRasterBand(4).SetDescription("Red")
-        dataset.GetRasterBand(5).SetDescription("NIR")
-        dataset.GetRasterBand(6).SetDescription("SWIR1")
-        dataset.GetRasterBand(7).SetDescription("SWIR2")
-        dataset = None
+        for i in range(242):
+            dataset.GetRasterBand(i+1).SetDescription("Band%s"%str(i+1))
+        # dataset.GetRasterBand(1).SetDescription("Coastal")
+        # dataset.GetRasterBand(2).SetDescription("Blue")
+        # dataset.GetRasterBand(3).SetDescription("Green")
+        # dataset.GetRasterBand(4).SetDescription("Red")
+        # dataset.GetRasterBand(5).SetDescription("NIR")
+        # dataset.GetRasterBand(6).SetDescription("SWIR1")
+        # dataset.GetRasterBand(7).SetDescription("SWIR2")
+        # dataset = None
 
     def cleanLocalFollowProcessing(self):
         print("")
