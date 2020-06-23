@@ -378,11 +378,10 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
 
     def generateOutputBaseName(self):
         """
-        Provides an implementation for the landsat sensor
+        Provides an implementation for the Hyperion sensor
         """
         #rowpath = "r" + str(self.row) + "p" + str(self.path)
-        outname = self.defaultGenBaseOutFileName()
-        outname = outname + str("_")
+        outname = self.band11File.split("_")[0]
         return outname
 
     def generateMetaDataFile(self, outputPath, outputFileName, productsStr, validMaskImage="", footprintCalc=False, calcdValuesDict=dict(), outFilesDict=dict()):
@@ -521,7 +520,7 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         outputThermalImage = None
         bandDefnSeq = list()
         lsBand = collections.namedtuple('LSBand', ['bandName', 'fileName', 'bandIndex', 'addVal', 'multiVal'])
-        #Change this to for loop?
+        #Change this to for loop? TODO:ForLoop
         bandDefnSeq.append(lsBand(bandName="Band1", fileName=self.band1File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
         bandDefnSeq.append(lsBand(bandName="Band2", fileName=self.band2File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
         bandDefnSeq.append(lsBand(bandName="Band3", fileName=self.band3File, bandIndex=1, addVal=0.0, multiVal=self.vnir_rad_scale))
@@ -589,6 +588,7 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         outputImage = os.path.join(outputPath, outputName)
         solarIrradianceVals = list()
         IrrVal = collections.namedtuple('SolarIrradiance', ['irradiance'])
+        #TODO:Add for loop
         solarIrradianceVals.append(IrrVal(irradiance=0949.37)) #band1
         solarIrradianceVals.append(IrrVal(irradiance=1158.78)) #band2 ....
         solarIrradianceVals.append(IrrVal(irradiance=1061.25))
