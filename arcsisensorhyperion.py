@@ -134,7 +134,8 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
             acTime = headerParams["START_TIME"].split(' ')
             secsTime = acTime[2].split(':')
             self.acquisitionTime = datetime.datetime(year=int(acData[0]),month=int(acData[1]),day= int(acData[2]),hour=int(secsTime[0]),minute=int(secsTime[1]),second=int(secsTime[2]))
-
+            #
+            #TODO: Go Ahead and make sure the metadata here is correct from the file
             self.solarZenith = arcsiUtils.str2Float(headerParams["SENSOR_LOOK_ANGLE"])
             self.solarAzimuth = 98 
 
@@ -366,7 +367,8 @@ class ARCSIHyperionSensor (ARCSIAbstractSensor):
         rsgislib.imagecalibration.landsat2RadianceMultiAdd(outputReflImage, outFormat, bandDefnSeq)
 
         return outputReflImage, outputThermalImage
-
+        
+    #Try this out and see how it changes it
     def generateImageSaturationMask(self, outputPath, outputName, outFormat):
         print("Generate Saturation Image")
         outputImage = os.path.join(outputPath, outputName)
